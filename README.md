@@ -1,3 +1,9 @@
+## Forked from [Shayne](https://github.com/shayne)
+
+This forked version moves the settings file from the execution path to %AppData%
+
+Additionally, this version allows you to only dim the primary monitory (useful for my setup where I have a very small monitor underneath my primary which is dedicated to widgets, emails, SMS, chat, etc) which i want fully illuminated all of the time
+
 # PowerDimmer
 
 [![Main workflow](https://github.com/shayne/PowerDimmer/actions/workflows/workflow.yml/badge.svg)](https://github.com/shayne/PowerDimmer/releases/tag/main)
