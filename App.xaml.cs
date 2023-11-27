@@ -18,7 +18,13 @@ namespace PowerDimmer
 
         public App()
         {
-            settings = new ConfigurationBuilder<ISettings>().UseJsonFile("settings.json").Build();
+            //store the settings file in appdata so that there are no issues accessing the file (like what we see if we try to launch dimmer from Task Scheduler)
+            string appFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string appName = "PowerDimmer";
+            string fileName = "settings.json";
+
+            string settingsFilePath = System.IO.Path.Combine(appFolder, appName, fileName);
+            settings = new ConfigurationBuilder<ISettings>().UseJsonFile(settingsFilePath).Build();
             settings.DimmingEnabled = settings.ActiveOnLaunch;
             settings.PropertyChanged += (s, e) =>
             {
