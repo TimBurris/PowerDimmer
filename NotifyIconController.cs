@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 
 using ModernNotifyIcon.Theme;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace PowerDimmer
@@ -38,6 +37,10 @@ namespace PowerDimmer
                         .SetText("Active on launch?")
                         .SetChecked(settings.ActiveOnLaunch)
                         .AddHandler((b) => settings.ActiveOnLaunch = b))
+                    .AddToggle(option => option
+                        .SetText("Only dim primary monitor?")
+                        .SetChecked(settings.DimOnlyPrimaryScreen)
+                        .AddHandler((b) => settings.DimOnlyPrimaryScreen = b))
                     .AddSeparator()
                     .AddItem(new TrackBarMenuItem(settings))
                     .AddSeparator()

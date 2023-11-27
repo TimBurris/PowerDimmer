@@ -37,6 +37,17 @@ namespace PowerDimmer
                         dimOff();
                     }
                 }
+                else if (e.PropertyName == nameof(settings.DimOnlyPrimaryScreen))
+                {
+                    if (settings.DimmingEnabled)
+                    {
+                        //kind of hacky, but the alternative if is a bit more involved.  
+                        //  clear existing dims
+                        dimOff();
+                        //re-apply dims to the appropriate monitor(s)
+                        dimOn(curFgHwnd);
+                    }
+                }
             };
         }
 
@@ -89,19 +100,32 @@ namespace PowerDimmer
         private void dimOn(IntPtr fgHwnd)
         {
             var opacity = brightnessToOpacity(settings.Brightness);
-            foreach (var screen in System.Windows.Forms.Screen.AllScreens)
+            if (settings.DimOnlyPrimaryScreen)
             {
-                var win = new DimWindow(settings)
+                var screen = System.Windows.Forms.Screen.PrimaryScreen;
+                dimScreen(screen, opacity);
+            }
+            else
+            {
+                foreach (var screen in System.Windows.Forms.Screen.AllScreens)
                 {
-                    Left = screen.Bounds.Left,
-                    Top = screen.Bounds.Top,
-                    Opacity = opacity
-                };
-                win.Show();
-                dimWindows.Add(win);
+                    dimScreen(screen, opacity);
+                }
             }
 
             UpdateDimming(fgHwnd);
+        }
+
+        private void dimScreen(System.Windows.Forms.Screen screen, double opacity)
+        {
+            var win = new DimWindow(settings)
+            {
+                Left = screen.Bounds.Left,
+                Top = screen.Bounds.Top,
+                Opacity = opacity
+            };
+            win.Show();
+            dimWindows.Add(win);
         }
 
         private void dimOff()
@@ -158,5 +182,8 @@ namespace PowerDimmer
 
         [Option(Alias = "brightness", DefaultValue = 50)]
         int Brightness { get; set; }
+
+        [Option(Alias = "dimOnlyPrimaryScreen", DefaultValue = false)]
+        bool DimOnlyPrimaryScreen { get; set; }
     }
 }
